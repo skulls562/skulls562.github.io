@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jerónimo Montoya — Software, IA y experiencias digitales</title>
+  <meta name="description" content="Portafolio de Jerónimo Montoya: software, IA aplicada, automatización y experiencias interactivas desde Medellín, Colombia.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;700&family=Inter:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Side neotribal 3D spines -->
+  <canvas id="side-spine-left"  class="side-spine" aria-hidden="true"></canvas>
+  <canvas id="side-spine-right" class="side-spine" aria-hidden="true"></canvas>
+
+  <!-- Floating neotribal daggers -->
+  <canvas id="dagger-canvas" aria-hidden="true"></canvas>
+
+  <canvas id="tribal-canvas" aria-hidden="true"></canvas>
+
+  <!-- Sharp-cross cursor -->
+  <div class="cursor" id="cursor" aria-hidden="true">
+    <svg viewBox="0 0 32 32" fill="none"><path d="M16 0 L17.8 13.8 L32 16 L17.8 18.2 L16 32 L14.2 18.2 L0 16 L14.2 13.8 Z" fill="#f87171"/></svg>
+  </div>
+  <div class="cursor-ring" id="cursor-ring" aria-hidden="true">
+    <svg viewBox="0 0 56 56" fill="none"><path d="M28 2 L29.5 24.5 L54 28 L29.5 31.5 L28 54 L26.5 31.5 L2 28 L26.5 24.5 Z" stroke="#dc2626" stroke-width="1.2" fill="none" opacity="0.55"/></svg>
+  </div>
+
+  <svg class="svg-defs" width="0" height="0" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="ornamentFadeDiag" x1="0" y1="0" x2="220" y2="220" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stop-color="#dc2626" stop-opacity="0.9"/>
+        <stop offset="44%" stop-color="#dc2626" stop-opacity="0.36"/>
+        <stop offset="78%" stop-color="#dc2626" stop-opacity="0.12"/>
+        <stop offset="100%" stop-color="#dc2626" stop-opacity="0"/>
+      </linearGradient>
+      <linearGradient id="ornamentFadeTop" x1="0" y1="18" x2="220" y2="18" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stop-color="#dc2626" stop-opacity="0.82"/>
+        <stop offset="58%" stop-color="#dc2626" stop-opacity="0.24"/>
+        <stop offset="100%" stop-color="#dc2626" stop-opacity="0"/>
+      </linearGradient>
+      <linearGradient id="ornamentFadeSide" x1="18" y1="0" x2="18" y2="220" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stop-color="#dc2626" stop-opacity="0.82"/>
+        <stop offset="58%" stop-color="#dc2626" stop-opacity="0.24"/>
+        <stop offset="100%" stop-color="#dc2626" stop-opacity="0"/>
+      </linearGradient>
+    </defs>
+    <symbol id="gothic-corner-ornament" viewBox="0 0 220 220">
+      <g fill="none" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke">
+        <path d="M14 218 C8 176 31 151 18 112 C5 73 29 48 18 2" stroke="url(#ornamentFadeSide)" stroke-width="3.4" opacity="0.95"/>
+        <path d="M2 18 C47 22 66 4 106 15 C142 25 164 7 218 14" stroke="url(#ornamentFadeTop)" stroke-width="3.4" opacity="0.95"/>
+        <path d="M18 18 C46 55 81 72 116 86 C151 100 176 128 214 162" stroke="url(#ornamentFadeDiag)" stroke-width="2.8" opacity="0.9"/>
+        <path d="M21 31 C50 48 49 74 81 90 C112 105 139 112 171 142" stroke="url(#ornamentFadeDiag)" stroke-width="1.8" opacity="0.72"/>
+        <path d="M30 14 C56 37 84 40 119 31 C144 24 166 29 203 20" stroke="url(#ornamentFadeTop)" stroke-width="1.6" opacity="0.7"/>
+        <path d="M16 40 C39 62 33 88 57 107 C82 127 78 154 107 180" stroke="url(#ornamentFadeSide)" stroke-width="1.7" opacity="0.68"/>
+        <path d="M30 58 C16 73 14 92 30 113 C46 98 47 75 30 58Z" stroke="#dc2626" stroke-width="1.3" opacity="0.4"/>
+        <path d="M55 24 C70 48 91 52 117 36 C95 24 75 17 55 24Z" stroke="#dc2626" stroke-width="1.2" opacity="0.38"/>
+        <path d="M22 102 C6 119 8 142 27 161 C47 140 43 116 22 102Z" stroke="#dc2626" stroke-width="1.15" opacity="0.32"/>
+        <path d="M92 58 C111 80 134 79 158 58 C130 50 110 47 92 58Z" stroke="#dc2626" stroke-width="0.9" opacity="0.22"/>
+        <path d="M18 70 L4 96 L30 84 L26 122 L47 88" stroke="#dc2626" stroke-width="1.1" opacity="0.36"/>
+        <path d="M20 140 L4 165 L31 155 L27 191 L50 160" stroke="#dc2626" stroke-width="1.05" opacity="0.28"/>
+        <path d="M67 25 L83 4 L91 31 L121 15 L102 42" stroke="#dc2626" stroke-width="0.95" opacity="0.32"/>
+        <path d="M134 17 L151 0 L157 24 L190 12 L169 36" stroke="#dc2626" stroke-width="0.8" opacity="0.18"/>
+        <path d="M19 19 L8 52 L29 32 L38 66 L47 28 L74 39 L50 17 Z" stroke="#dc2626" stroke-width="1.35" fill="rgba(220,38,38,0.1)" opacity="0.48"/>
+        <path d="M22 22 C38 43 47 44 72 24" stroke="#dc2626" stroke-width="2" opacity="0.58"/>
+        <path d="M22 21 C41 41 39 56 20 79" stroke="#dc2626" stroke-width="2" opacity="0.58"/>
+        <path d="M42 42 C68 75 104 92 146 104" stroke="#dc2626" stroke-width="0.65" opacity="0.18"/>
+        <path d="M31 31 C48 91 83 129 130 158" stroke="#dc2626" stroke-width="0.55" opacity="0.14"/>
+      </g>
+      <g fill="currentColor">
+        <circle cx="18" cy="18" r="3.4" opacity="0.58"/>
+        <circle cx="58" cy="35" r="2" opacity="0.28"/>
+        <circle cx="22" cy="94" r="1.8" opacity="0.22"/>
+        <circle cx="139" cy="18" r="1.5" opacity="0.2"/>
+      </g>
+      <path d="M184 18 L185.4 29 L197 30.4 L185.4 31.8 L184 44 L182.6 31.8 L171 30.4 L182.6 29 Z" fill="currentColor" opacity="0.24"/>
+    </symbol>
+  </svg>
+
+  <!-- NAV -->
+  <nav class="nav" id="nav">
+    <a href="#hero" class="nav__logo">JMG<span class="nav__logo-dot">.</span></a>
+    <ul class="nav__links">
+      <li><a href="#about">Sobre mí</a></li>
+      <li><a href="#skills">Habilidades</a></li>
+      <li><a href="#projects">Proyectos</a></li>
+      <li><a href="#gallery">Galería</a></li>
+      <li><a href="#roadmap">Roadmap</a></li>
+      <li><a href="#contact">Contacto</a></li>
+    </ul>
+    <a href="#contact" class="btn btn--sm nav__cta">Hablemos →</a>
+    <button class="nav__burger" id="navBurger" aria-label="Abrir menú" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+  <div class="nav-mobile" id="navMobile" aria-hidden="true">
+    <button class="nav-mobile__close" id="navClose" aria-label="Cerrar">✕</button>
+    <a href="#about">Sobre mí</a>
+    <a href="#skills">Habilidades</a>
+    <a href="#projects">Proyectos</a>
+    <a href="#gallery">Galería</a>
+    <a href="#roadmap">Roadmap</a>
+    <a href="#contact">Contacto</a>
+  </div>
+
+  <!-- ══════════════════════════════════════════ HERO -->
+  <section id="hero" class="hero">
+    <div class="hero__bg-sigil" aria-hidden="true">
+      <!-- Organic cybersigilism SVG background decoration -->
+      <svg class="bg-sigil-svg" viewBox="0 0 900 900" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <!-- Central sigil circle -->
+        <circle cx="450" cy="450" r="320" stroke="#dc2626" stroke-width="0.5" opacity="0.12"/>
+        <circle cx="450" cy="450" r="240" stroke="#dc2626" stroke-width="0.4" opacity="0.08"/>
+        <circle cx="450" cy="450" r="160" stroke="#dc2626" stroke-width="0.3" opacity="0.06"/>
+        <!-- Radial spokes -->
+        <line x1="450" y1="130" x2="450" y2="770" stroke="#dc2626" stroke-width="0.3" opacity="0.07"/>
+        <line x1="130" y1="450" x2="770" y2="450" stroke="#dc2626" stroke-width="0.3" opacity="0.07"/>
+        <line x1="224" y1="224" x2="676" y2="676" stroke="#dc2626" stroke-width="0.2" opacity="0.05"/>
+        <line x1="676" y1="224" x2="224" y2="676" stroke="#dc2626" stroke-width="0.2" opacity="0.05"/>
+        <!-- Neo-tribal outer star -->
+        <path d="M450 130 L461 420 L740 450 L461 480 L450 770 L439 480 L160 450 L439 420 Z" stroke="#dc2626" stroke-width="0.6" fill="none" opacity="0.14"/>
+        <!-- Organic tendril paths (cybersigilism style) -->
+        <path d="M450 130 C430 160 410 150 390 180 C370 210 380 240 350 250 C320 260 290 240 270 260 C250 280 260 310 240 320" stroke="#dc2626" stroke-width="0.8" fill="none" opacity="0.18" stroke-linecap="round"/>
+        <path d="M450 130 C470 155 495 148 510 175 C525 202 515 228 540 240 C565 252 592 235 612 255 C632 275 622 305 645 318" stroke="#dc2626" stroke-width="0.8" fill="none" opacity="0.18" stroke-linecap="round"/>
+        <path d="M450 770 C432 745 415 752 398 725 C381 698 392 672 368 660 C344 648 318 665 298 645 C278 625 289 595 268 582" stroke="#dc2626" stroke-width="0.7" fill="none" opacity="0.14" stroke-linecap="round"/>
+        <path d="M450 770 C468 743 485 750 502 723 C519 696 508 670 532 658 C556 646 582 663 602 643 C622 623 611 593 632 580" stroke="#dc2626" stroke-width="0.7" fill="none" opacity="0.14" stroke-linecap="round"/>
+        <!-- Spike ornaments on top -->
+        <path d="M450 130 L445 108 L450 95 L455 108 Z" fill="#dc2626" opacity="0.4"/>
+        <path d="M450 130 L437 112 L440 100 L450 108 Z" fill="#dc2626" opacity="0.2"/>
+        <path d="M450 130 L463 112 L460 100 L450 108 Z" fill="#dc2626" opacity="0.2"/>
+      </svg>
+    </div>
+
+    <!-- 4 corner sigils -->
+    <svg class="sigil-corner sigil-tl" viewBox="0 0 220 220" fill="none" aria-hidden="true">
+      <use href="#gothic-corner-ornament" width="220" height="220"></use>
+    </svg>
+    <svg class="sigil-corner sigil-tr" viewBox="0 0 220 220" fill="none" aria-hidden="true">
+      <use href="#gothic-corner-ornament" width="220" height="220"></use>
+    </svg>
+    <svg class="sigil-corner sigil-bl" viewBox="0 0 220 220" fill="none" aria-hidden="true">
+      <use href="#gothic-corner-ornament" width="220" height="220"></use>
+    </svg>
+    <svg class="sigil-corner sigil-br" viewBox="0 0 220 220" fill="none" aria-hidden="true">
+      <use href="#gothic-corner-ornament" width="220" height="220"></use>
+    </svg>
+
+    <div class="hero__glow hero__glow--a" aria-hidden="true"></div>
+    <div class="hero__glow hero__glow--b" aria-hidden="true"></div>
+
+    <div class="hero__content">
+      <div class="hero__status">
+        <span class="hero__status-dot" aria-hidden="true"></span>
+        <span class="mono">Disponible para proyectos</span>
+      </div>
+
+      <p class="hero__label"><span class="mono">[ 01 ]</span><span>Software · IA · Automatización · Interacción</span></p>
+
+      <h1 class="hero__name" aria-label="Jerónimo Montoya Giraldo">
+        <span class="hero__n1">JERÓNIMO</span>
+        <span class="hero__n2">MONTOYA</span>
+        <span class="hero__n3">GIRALDO</span>
+      </h1>
+
+      <div class="hero__barcode" aria-hidden="true">
+        <svg viewBox="0 0 160 28" fill="none"><rect x="0" y="0" width="2" height="28" fill="#dc2626" opacity="0.7"/><rect x="4" y="0" width="1" height="28" fill="#dc2626" opacity="0.6"/><rect x="7" y="0" width="3" height="28" fill="#dc2626" opacity="0.7"/><rect x="12" y="0" width="1" height="28" fill="#dc2626" opacity="0.5"/><rect x="15" y="0" width="2" height="28" fill="#dc2626" opacity="0.65"/><rect x="19" y="0" width="4" height="28" fill="#dc2626" opacity="0.7"/><rect x="25" y="0" width="1" height="28" fill="#dc2626" opacity="0.5"/><rect x="28" y="0" width="3" height="28" fill="#dc2626" opacity="0.65"/><rect x="33" y="0" width="2" height="28" fill="#dc2626" opacity="0.7"/><rect x="37" y="0" width="4" height="28" fill="#dc2626" opacity="0.6"/><rect x="43" y="0" width="1" height="28" fill="#dc2626" opacity="0.5"/><rect x="46" y="0" width="3" height="28" fill="#dc2626" opacity="0.65"/><rect x="51" y="0" width="2" height="28" fill="#dc2626" opacity="0.7"/><rect x="55" y="0" width="1" height="28" fill="#dc2626" opacity="0.45"/><rect x="58" y="0" width="4" height="28" fill="#dc2626" opacity="0.7"/><rect x="64" y="0" width="2" height="28" fill="#dc2626" opacity="0.6"/><rect x="68" y="0" width="3" height="28" fill="#dc2626" opacity="0.65"/><rect x="73" y="0" width="1" height="28" fill="#dc2626" opacity="0.5"/><rect x="76" y="0" width="2" height="28" fill="#dc2626" opacity="0.7"/><rect x="80" y="0" width="4" height="28" fill="#dc2626" opacity="0.6"/><rect x="86" y="0" width="1" height="28" fill="#dc2626" opacity="0.5"/><rect x="89" y="0" width="3" height="28" fill="#dc2626" opacity="0.65"/><rect x="94" y="0" width="2" height="28" fill="#dc2626" opacity="0.7"/><rect x="98" y="0" width="4" height="28" fill="#dc2626" opacity="0.6"/><rect x="104" y="0" width="1" height="28" fill="#dc2626" opacity="0.5"/><rect x="107" y="0" width="2" height="28" fill="#dc2626" opacity="0.65"/><rect x="111" y="0" width="3" height="28" fill="#dc2626" opacity="0.7"/><rect x="116" y="0" width="4" height="28" fill="#dc2626" opacity="0.6"/><rect x="122" y="0" width="1" height="28" fill="#dc2626" opacity="0.5"/><rect x="125" y="0" width="3" height="28" fill="#dc2626" opacity="0.65"/><rect x="130" y="0" width="2" height="28" fill="#dc2626" opacity="0.7"/><rect x="134" y="0" width="4" height="28" fill="#dc2626" opacity="0.6"/><rect x="140" y="0" width="1" height="28" fill="#dc2626" opacity="0.5"/><rect x="143" y="0" width="3" height="28" fill="#dc2626" opacity="0.65"/><rect x="148" y="0" width="2" height="28" fill="#dc2626" opacity="0.7"/><rect x="152" y="0" width="2" height="28" fill="#dc2626" opacity="0.6"/><rect x="156" y="0" width="4" height="28" fill="#dc2626" opacity="0.7"/></svg>
+        <span class="mono">JMG-2026-PORTFOLIO</span>
+      </div>
+
+      <p class="hero__title" aria-live="polite">
+        <span class="typing-text" id="heroTyping" data-words="Software &amp; AI Builder|Creative Developer|Diseñador de Experiencias|VR / AR Designer">Software &amp; AI Builder</span><span class="typing-cursor" aria-hidden="true">_</span>
+      </p>
+
+      <p class="hero__desc">Convierto procesos e ideas en productos digitales útiles,<br><em>claros, interactivos y hechos para personas reales.</em></p>
+
+      <div class="hero__actions">
+        <a href="#projects" class="btn btn--primary">Ver proyectos</a>
+        <a href="#about" class="btn btn--ghost">Conocerme →</a>
+      </div>
+    </div>
+
+    <div class="hero__scroll" aria-hidden="true">
+      <span class="mono">scroll</span>
+      <div class="hero__scroll-bar"></div>
+    </div>
+
+    <!-- Organic divider at bottom of hero -->
+    <svg class="hero__divider-sigil" viewBox="0 0 800 40" fill="none" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+      <path d="M0 20 C100 20 150 10 200 20 C250 30 270 15 300 20" stroke="#dc2626" stroke-width="0.5" opacity="0.3" fill="none"/>
+      <path d="M800 20 C700 20 650 10 600 20 C550 30 530 15 500 20" stroke="#dc2626" stroke-width="0.5" opacity="0.3" fill="none"/>
+      <!-- Central medallion -->
+      <path d="M400 4 L410 20 L400 36 L390 20 Z" stroke="#dc2626" stroke-width="1.2" fill="rgba(220,38,38,0.08)" opacity="0.7"/>
+      <path d="M400 4 L406 20 L400 36 L394 20 Z" stroke="#dc2626" stroke-width="0.5" fill="none" opacity="0.4"/>
+      <path d="M400 0 L397 4 L400 2 L403 4 Z" fill="#dc2626" opacity="0.8"/>
+      <path d="M400 40 L397 36 L400 38 L403 36 Z" fill="#dc2626" opacity="0.8"/>
+      <!-- Tendril extensions from medallion -->
+      <path d="M380 20 C360 18 340 25 310 20 C280 15 270 22 250 20" stroke="#dc2626" stroke-width="0.6" opacity="0.35" fill="none" stroke-linecap="round"/>
+      <path d="M420 20 C440 18 460 25 490 20 C520 15 530 22 550 20" stroke="#dc2626" stroke-width="0.6" opacity="0.35" fill="none" stroke-linecap="round"/>
+      <!-- Spike ornaments -->
+      <path d="M310 20 L305 14 L308 8 L312 14 L318 20" stroke="#dc2626" stroke-width="0.5" fill="rgba(220,38,38,0.12)" opacity="0.5"/>
+      <path d="M490 20 L495 14 L492 8 L488 14 L482 20" stroke="#dc2626" stroke-width="0.5" fill="rgba(220,38,38,0.12)" opacity="0.5"/>
+    </svg>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee-wrap" aria-hidden="true">
+    <div class="marquee__inner">
+      <span>Realidad Virtual</span><span class="msep">✦</span><span>UX / UI</span><span class="msep">✦</span><span>Three.js</span><span class="msep">✦</span><span>Creative Code</span><span class="msep">✦</span><span>Unity</span><span class="msep">✦</span><span>Inteligencia Artificial</span><span class="msep">✦</span><span>Diseño Interactivo</span><span class="msep">✦</span><span>TouchDesigner</span><span class="msep">✦</span><span>WebGL</span><span class="msep">✦</span><span>GSAP</span><span class="msep">✦</span><span>React</span><span class="msep">✦</span><span>Blender</span><span class="msep">✦</span><span>Motion Design</span><span class="msep">✦</span><span>Dark Fantasy</span><span class="msep">✦</span>
+      <span>Realidad Virtual</span><span class="msep">✦</span><span>UX / UI</span><span class="msep">✦</span><span>Three.js</span><span class="msep">✦</span><span>Creative Code</span><span class="msep">✦</span><span>Unity</span><span class="msep">✦</span><span>Inteligencia Artificial</span><span class="msep">✦</span><span>Diseño Interactivo</span><span class="msep">✦</span><span>TouchDesigner</span><span class="msep">✦</span><span>WebGL</span><span class="msep">✦</span><span>GSAP</span><span class="msep">✦</span><span>React</span><span class="msep">✦</span><span>Blender</span><span class="msep">✦</span><span>Motion Design</span><span class="msep">✦</span><span>Dark Fantasy</span><span class="msep">✦</span>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════ ABOUT -->
+  <section id="about" class="about section">
+    <!-- Gothic corner ornaments -->
+    <svg class="sec-corner sec-corner-tl" viewBox="0 0 220 220" fill="none" aria-hidden="true"><use href="#gothic-corner-ornament" width="220" height="220"></use></svg>
+    <svg class="sec-corner sec-corner-br" viewBox="0 0 220 220" fill="none" aria-hidden="true"><use href="#gothic-corner-ornament" width="220" height="220"></use></svg>
+    <div class="sec-edge" aria-hidden="true"><div class="sec-edge__line"></div><div class="sec-edge__gem"></div><div class="sec-edge__gem"></div><div class="sec-edge__gem"></div></div>
+    <canvas class="sec-canvas" id="about-canvas" aria-hidden="true"></canvas>
+    <!-- Organic section bg decoration -->
+    <div class="section-bg-sigil" aria-hidden="true">
+      <svg viewBox="0 0 400 600" fill="none"><path d="M200 0 C180 80 140 100 120 160 C100 220 130 270 100 330 C70 390 20 400 10 460 C0 520 40 560 50 600" stroke="#dc2626" stroke-width="0.6" opacity="0.08" fill="none" stroke-linecap="round"/><path d="M200 0 C220 75 258 98 278 155 C298 212 268 260 298 318 C328 376 376 388 388 448 C400 508 362 552 358 600" stroke="#dc2626" stroke-width="0.5" opacity="0.06" fill="none" stroke-linecap="round"/></svg>
+    </div>
+    <svg class="ambient-star ambient-star--about" viewBox="0 0 120 120" fill="none" aria-hidden="true"><circle cx="60" cy="60" r="52" stroke="#dc2626" stroke-width="0.5" opacity="0.18"/><path d="M60 16 L63 55 L102 60 L63 65 L60 104 L57 65 L18 60 L57 55 Z" stroke="#dc2626" stroke-width="0.6" fill="none" opacity="0.34"/></svg>
+    <div class="container">
+      <header class="section-head">
+        <span class="mono section-num">[ 02 ]</span>
+        <h2 class="section-title">¿Quién soy?</h2>
+      </header>
+      <div class="about__grid">
+        <div class="about__left">
+          <div class="about__photo">
+            <div class="about__photo-inner">
+              <img class="about__photo-img" src="assets/images/about-photo.jpeg" alt="Foto de Jerónimo Montoya Giraldo">
+            </div>
+            <div class="about__photo-frame" aria-hidden="true"></div>
+            <svg class="photo-sigil" viewBox="0 0 60 60" fill="none" aria-hidden="true">
+              <path d="M0 0 L22 0 M0 0 L0 22" stroke="#dc2626" stroke-width="1.5" opacity="0.7"/>
+              <path d="M0 0 C8 12 6 22 14 28" stroke="#dc2626" stroke-width="0.5" fill="none" opacity="0.3" stroke-linecap="round"/>
+              <circle cx="0" cy="0" r="3" fill="#dc2626" opacity="0.8"/>
+              <path d="M60 60 L38 60 M60 60 L60 38" stroke="#dc2626" stroke-width="1.5" opacity="0.7"/>
+              <circle cx="60" cy="60" r="3" fill="#dc2626" opacity="0.8"/>
+            </svg>
+          </div>
+          <div class="about__stats">
+            <div class="about__stat"><span class="about__stat-n">23</span><span class="about__stat-l mono">Años</span></div>
+            <div class="about__stat"><span class="about__stat-n" data-count="9">9+</span><span class="about__stat-l mono">Proyectos</span></div>
+          </div>
+        </div>
+        <div class="about__right">
+          <p class="about__bio about__bio--lead">Soy <strong>Jerónimo Montoya Giraldo</strong>, tengo 23 años y estudio <strong>Ingeniería en Diseño y Entretenimiento Digital</strong>.</p>
+          <p class="about__bio">Me apasionan los videojuegos, la música, el diseño, la tecnología, el desarrollo web y la creación de contenido con inteligencia artificial. Me gusta mezclar todos mis intereses en proyectos creativos que conecten con personas.</p>
+          <p class="about__bio">Actualmente estoy muy enfocado en el desarrollo web, la creación de herramientas con IA y la construcción de proyectos digitales escalables. Quiero aprender constantemente, experimentar y convertir ideas en experiencias visuales e interactivas.</p>
+
+          <h3 class="about__interests-title mono">// Lo que me mueve</h3>
+          <div class="interests__grid">
+            <div class="interest-card">
+              <svg class="interest-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 12h4M8 10v4M15 11h2M15 13h2"/></svg>
+              <span class="interest-card__name">Videojuegos</span>
+              <span class="interest-card__sub mono">Dark Souls · Hollow Knight · Narrativa</span>
+            </div>
+            <div class="interest-card">
+              <svg class="interest-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+              <span class="interest-card__name">Música</span>
+              <span class="interest-card__sub mono">Dark Wave · Electronic · Banda propia</span>
+            </div>
+            <div class="interest-card">
+              <svg class="interest-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+              <span class="interest-card__name">Realidad Virtual</span>
+              <span class="interest-card__sub mono">XR · Inmersión · Experiencias</span>
+            </div>
+            <div class="interest-card">
+              <svg class="interest-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+              <span class="interest-card__name">Inteligencia Artificial</span>
+              <span class="interest-card__sub mono">Generativa · Herramientas · Creación</span>
+            </div>
+            <div class="interest-card">
+              <svg class="interest-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+              <span class="interest-card__name">Arte Digital</span>
+              <span class="interest-card__sub mono">Cybersigilism · Gótico · Concepto</span>
+            </div>
+            <div class="interest-card">
+              <svg class="interest-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+              <span class="interest-card__name">Cine & Narrativa</span>
+              <span class="interest-card__sub mono">Sci-Fi · Distopías · Storytelling</span>
+            </div>
+          </div>
+          <div class="about__tags">
+            <span class="tag">UX/UI</span><span class="tag">Desarrollo web</span><span class="tag">Realidad Virtual</span><span class="tag">3D interactivo</span><span class="tag">IA aplicada</span><span class="tag">Unity</span><span class="tag">Entretenimiento digital</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SIGIL DIVIDER -->
+  <div class="sigil-divider" aria-hidden="true"><svg viewBox="0 0 1400 44" fill="none" preserveAspectRatio="xMidYMid meet"><path d="M0 22 C200 22 300 14 400 22 C500 30 520 16 560 22" stroke="#dc2626" stroke-width="0.5" opacity="0.25" fill="none"/><path d="M1400 22 C1200 22 1100 14 1000 22 C900 30 880 16 840 22" stroke="#dc2626" stroke-width="0.5" opacity="0.25" fill="none"/><path d="M700 4 L712 22 L700 40 L688 22 Z" stroke="#dc2626" stroke-width="1.4" fill="rgba(220,38,38,0.07)" opacity="0.7"/><path d="M700 0 L697 4 L700 2 L703 4 Z" fill="#dc2626" opacity="0.8"/><path d="M700 44 L697 40 L700 42 L703 40 Z" fill="#dc2626" opacity="0.8"/><path d="M685 22 C665 20 640 26 610 22 C580 18 565 24 540 22" stroke="#dc2626" stroke-width="0.6" opacity="0.3" fill="none" stroke-linecap="round"/><path d="M715 22 C735 20 760 26 790 22 C820 18 835 24 860 22" stroke="#dc2626" stroke-width="0.6" opacity="0.3" fill="none" stroke-linecap="round"/><path d="M610 22 L605 15 L608 8 L612 15 L618 22" stroke="#dc2626" stroke-width="0.5" fill="rgba(220,38,38,0.1)" opacity="0.5"/><path d="M790 22 L795 15 L792 8 L788 15 L782 22" stroke="#dc2626" stroke-width="0.5" fill="rgba(220,38,38,0.1)" opacity="0.5"/></svg></div>
+
+  <!-- ══════════════════════════════════════════ SKILLS -->
+  <section id="skills" class="skills section">
+    <svg class="sec-corner sec-corner-tl" viewBox="0 0 220 220" fill="none" aria-hidden="true"><use href="#gothic-corner-ornament" width="220" height="220"></use></svg>
+    <svg class="sec-corner sec-corner-br" viewBox="0 0 220 220" fill="none" aria-hidden="true"><use href="#gothic-corner-ornament" width="220" height="220"></use></svg>
+    <div class="sec-edge" aria-hidden="true"><div class="sec-edge__line"></div><div class="sec-edge__gem"></div><div class="sec-edge__gem"></div><div class="sec-edge__gem"></div></div>
+    <canvas class="sec-canvas" id="skills-canvas" aria-hidden="true"></canvas>
+    <div class="section-bg-sigil" aria-hidden="true"></div>
+    <svg class="ambient-star ambient-star--skills" viewBox="0 0 120 120" fill="none" aria-hidden="true"><circle cx="60" cy="60" r="52" stroke="#dc2626" stroke-width="0.5" opacity="0.18"/><path d="M60 16 L63 55 L102 60 L63 65 L60 104 L57 65 L18 60 L57 55 Z" stroke="#dc2626" stroke-width="0.6" fill="none" opacity="0.34"/></svg>
+    <div class="container">
+      <header class="section-head">
+        <span class="mono section-num">[ 03 ]</span>
+        <h2 class="section-title">Habilidades</h2>
+        <p class="section-sub">Un mapa de disciplinas que mezclo para diseñar experiencias visuales e interactivas.</p>
+      </header>
+
+      <div class="skills__cats">
+
+        <div class="skill-cat">
+          <div class="skill-cat__header">
+            <svg class="skill-cat__icon" viewBox="0 0 20 20" fill="none" stroke="#dc2626" stroke-width="1.2"><rect x="2" y="3" width="16" height="11" rx="1"/><path d="M7 18h6M10 14v4"/><path d="M5 7h2M9 7h6"/></svg>
+            <h3 class="skill-cat__title mono">// Web & IA</h3>
+          </div>
+          <div class="skill-cat__items">
+            <span class="skill-pill skill-pill--strong">Landing pages</span>
+            <span class="skill-pill skill-pill--strong">Frontend web</span>
+            <span class="skill-pill">Automatización con IA</span>
+            <span class="skill-pill">Herramientas personales</span>
+            <span class="skill-pill">Creación de contenido IA</span>
+            <span class="skill-pill">Proyectos web</span>
+            <span class="skill-pill skill-pill--learning">Backend (aprendiendo)</span>
+          </div>
+        </div>
+
+        <div class="skill-cat">
+          <div class="skill-cat__header">
+            <svg class="skill-cat__icon" viewBox="0 0 20 20" fill="none" stroke="#dc2626" stroke-width="1.2"><path d="M10 2L2 6l8 4 8-4-8-4z"/><path d="M2 14l8 4 8-4M2 10l8 4 8-4"/></svg>
+            <h3 class="skill-cat__title mono">// Diseño & VR</h3>
+          </div>
+          <div class="skill-cat__items">
+            <span class="skill-pill skill-pill--strong">Unity</span>
+            <span class="skill-pill skill-pill--strong">Realidad virtual</span>
+            <span class="skill-pill skill-pill--strong">Experiencias interactivas</span>
+            <span class="skill-pill">Realidad aumentada</span>
+            <span class="skill-pill">Prototipado</span>
+            <span class="skill-pill">Diseño de interfaces</span>
+            <span class="skill-pill skill-pill--mid">TouchDesigner</span>
+            <span class="skill-pill skill-pill--learning">Blender (básico)</span>
+          </div>
+        </div>
+
+        <div class="skill-cat">
+          <div class="skill-cat__header">
+            <svg class="skill-cat__icon" viewBox="0 0 20 20" fill="none" stroke="#dc2626" stroke-width="1.2"><path d="M4 4h12v12H4z"/><path d="M8 4v12M4 8h12M4 12h12"/></svg>
+            <h3 class="skill-cat__title mono">// Gestión</h3>
+          </div>
+          <div class="skill-cat__items">
+            <span class="skill-pill skill-pill--strong">Project management</span>
+            <span class="skill-pill skill-pill--strong">Notion</span>
+            <span class="skill-pill">Microsoft Loop</span>
+            <span class="skill-pill">Documentación</span>
+            <span class="skill-pill">Trabajo en equipo</span>
+            <span class="skill-pill">Planeación digital</span>
+          </div>
+        </div>
+
+        <div class="skill-cat">
+          <div class="skill-cat__header">
+            <svg class="skill-cat__icon" viewBox="0 0 20 20" fill="none" stroke="#dc2626" stroke-width="1.2"><path d="M6 4l-4 6 4 6M14 4l4 6-4 6M11 3l-2 14"/></svg>
+            <h3 class="skill-cat__title mono">// Programación</h3>
+          </div>
+          <div class="skill-cat__items">
+            <span class="skill-pill skill-pill--strong">C#</span>
+            <span class="skill-pill skill-pill--strong">React</span>
+            <span class="skill-pill skill-pill--strong">Frontend</span>
+            <span class="skill-pill">Python</span>
+            <span class="skill-pill">Integración de herramientas</span>
+          </div>
+        </div>
+
+        <div class="skill-cat">
+          <div class="skill-cat__header">
+            <svg class="skill-cat__icon" viewBox="0 0 20 20" fill="none" stroke="#dc2626" stroke-width="1.2"><circle cx="10" cy="7" r="4"/><path d="M2 18c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+            <h3 class="skill-cat__title mono">// Humanas</h3>
+          </div>
+          <div class="skill-cat__items">
+            <span class="skill-pill skill-pill--strong">Comunicación</span>
+            <span class="skill-pill skill-pill--strong">Empatía con usuarios</span>
+            <span class="skill-pill">Atención al cliente</span>
+            <span class="skill-pill">Conexión con comunidades</span>
+            <span class="skill-pill">Música (banda)</span>
+            <span class="skill-pill">Sensibilidad creativa</span>
+          </div>
+          <p class="skill-cat__note mono">// H&amp;M · Venta de boletas · Empresa de costura</p>
+        </div>
+
+        <div class="skill-cat skill-cat--ecosystem">
+          <div class="skill-cat__header">
+            <svg class="skill-cat__icon" viewBox="0 0 20 20" fill="none" stroke="#dc2626" stroke-width="1.2"><circle cx="10" cy="10" r="8"/><path d="M10 6v4l3 3"/></svg>
+            <h3 class="skill-cat__title mono">// Arsenal de herramientas</h3>
+          </div>
+          <div class="tools-arsenal">
+            <div class="tools-grid">
+
+              <div class="tool-card">
+                <div class="tool-card__glyph" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="5" y="2" width="7" height="7" rx="1.5"/><rect x="5" y="9" width="7" height="7" rx="1.5"/>
+                    <rect x="5" y="16" width="7" height="6" rx="3"/><rect x="12" y="2" width="7" height="7" rx="3.5"/>
+                    <circle cx="15.5" cy="12.5" r="3.5"/>
+                  </svg>
+                </div>
+                <span class="tool-card__name">Figma</span>
+                <span class="tool-card__tag mono">UI Design</span>
+                <div class="tool-card__dots" aria-label="Nivel: experto"><span class="dot dot--on"></span><span class="dot dot--on"></span><span class="dot dot--on"></span></div>
+              </div>
+
+              <div class="tool-card">
+                <div class="tool-card__glyph" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="2" width="20" height="20" rx="2"/>
+                    <path d="M7 17l4-12 4 12M7 13.5h8"/>
+                  </svg>
+                </div>
+                <span class="tool-card__name">Adobe CC</span>
+                <span class="tool-card__tag mono">Multimedia</span>
+                <div class="tool-card__dots" aria-label="Nivel: intermedio"><span class="dot dot--on"></span><span class="dot dot--on"></span><span class="dot"></span></div>
+              </div>
+
+              <div class="tool-card">
+                <div class="tool-card__glyph" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+                    <path d="M3 18C6 9 9 6 12 6C15 6 18 9 21 18"/>
+                    <path d="M3 21h18" stroke-width="1" opacity=".4"/>
+                    <path d="M8 21v-3M12 21v-3M16 21v-3" stroke-width="1.2" opacity=".55"/>
+                    <circle cx="12" cy="6" r="1.8" fill="currentColor" stroke="none"/>
+                  </svg>
+                </div>
+                <span class="tool-card__name">GSAP</span>
+                <span class="tool-card__tag mono">Animación</span>
+                <div class="tool-card__dots" aria-label="Nivel: experto"><span class="dot dot--on"></span><span class="dot dot--on"></span><span class="dot dot--on"></span></div>
+              </div>
+
+              <div class="tool-card">
+                <div class="tool-card__glyph" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2L22 20H2L12 2Z"/>
+                    <path d="M7.5 13.5L12 7L16.5 13.5L12 20L7.5 13.5Z" stroke-width=".9" opacity=".5"/>
+                  </svg>
+                </div>
+                <span class="tool-card__name">Three.js</span>
+                <span class="tool-card__tag mono">3D / WebGL</span>
+                <div class="tool-card__dots" aria-label="Nivel: intermedio"><span class="dot dot--on"></span><span class="dot dot--on"></span><span class="dot"></span></div>
+              </div>
+
+              <div class="tool-card">
+                <div class="tool-card__glyph" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+                    <circle cx="6" cy="6" r="2.2"/><circle cx="6" cy="18" r="2.2"/><circle cx="18" cy="10" r="2.2"/>
+                    <line x1="6" y1="8.2" x2="6" y2="15.8"/>
+                    <path d="M8.1 5.5Q18 5.5 18 10" fill="none"/>
+                  </svg>
+                </div>
+                <span class="tool-card__name">Git / GitHub</span>
+                <span class="tool-card__tag mono">Versión</span>
+                <div class="tool-card__dots" aria-label="Nivel: intermedio"><span class="dot dot--on"></span><span class="dot dot--on"></span><span class="dot"></span></div>
+              </div>
+
+              <div class="tool-card">
+                <div class="tool-card__glyph" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M8 4L2 12L8 20"/><path d="M16 4L22 12L16 20"/><path d="M14 4L10 20"/>
+                  </svg>
+                </div>
+                <span class="tool-card__name">VS Code</span>
+                <span class="tool-card__tag mono">Dev</span>
+                <div class="tool-card__dots" aria-label="Nivel: experto"><span class="dot dot--on"></span><span class="dot dot--on"></span><span class="dot dot--on"></span></div>
+              </div>
+
+              <div class="tool-card">
+                <div class="tool-card__glyph" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+                    <circle cx="5" cy="8" r="1.8"/><circle cx="5" cy="16" r="1.8"/>
+                    <circle cx="12" cy="5" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="12" cy="19" r="1.8"/>
+                    <circle cx="19" cy="8" r="1.8"/><circle cx="19" cy="16" r="1.8"/>
+                    <path d="M6.7 8.4L10.3 5.7M6.7 9L10.3 11.3M6.7 15.4L10.3 12.7M6.7 16L10.3 18.3M13.7 5.5L17.3 7.5M13.7 12L17.3 9.3M13.7 12.5L17.3 15M13.7 18.5L17.3 16.8" stroke-width="1" opacity=".55"/>
+                  </svg>
+                </div>
+                <span class="tool-card__name">Claude / GPT</span>
+                <span class="tool-card__tag mono">IA</span>
+                <div class="tool-card__dots" aria-label="Nivel: experto"><span class="dot dot--on"></span><span class="dot dot--on"></span><span class="dot dot--on"></span></div>
+              </div>
+
+              <div class="tool-card">
+                <div class="tool-card__glyph" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="4" width="18" height="13" rx="2"/>
+                    <circle cx="8.5" cy="9" r="1.5"/>
+                    <path d="M3 13l4-3.5 4 3 3-3 7 3.5"/>
+                  </svg>
+                </div>
+                <span class="tool-card__name">Midjourney</span>
+                <span class="tool-card__tag mono">Generativa</span>
+                <div class="tool-card__dots" aria-label="Nivel: intermedio"><span class="dot dot--on"></span><span class="dot dot--on"></span><span class="dot"></span></div>
+              </div>
+
+              <div class="tool-card">
+                <div class="tool-card__glyph" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+                    <circle cx="12" cy="12" r="4"/><ellipse cx="12" cy="12" rx="10" ry="4"/>
+                    <line x1="12" y1="2" x2="12" y2="22" stroke-width=".9" opacity=".4"/>
+                  </svg>
+                </div>
+                <span class="tool-card__name">Blender</span>
+                <span class="tool-card__tag mono">3D</span>
+                <div class="tool-card__dots" aria-label="Nivel: básico"><span class="dot dot--on"></span><span class="dot"></span><span class="dot"></span></div>
+              </div>
+
+              <div class="tool-card">
+                <div class="tool-card__glyph" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+                    <circle cx="5" cy="12" r="2.2"/><circle cx="12" cy="6" r="2.2"/>
+                    <circle cx="12" cy="18" r="2.2"/><circle cx="19" cy="12" r="2.2"/>
+                    <path d="M7 11.2L10 7.2M7 12.8L10 16.8M14 6.8L17 10.5M14 17.2L17 13.5"/>
+                  </svg>
+                </div>
+                <span class="tool-card__name">TouchDesigner</span>
+                <span class="tool-card__tag mono">Visual</span>
+                <div class="tool-card__dots" aria-label="Nivel: intermedio"><span class="dot dot--on"></span><span class="dot dot--on"></span><span class="dot"></span></div>
+              </div>
+
+              <div class="tool-card">
+                <div class="tool-card__glyph" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2L20 7V17L12 22L4 17V7L12 2Z"/>
+                    <path d="M12 2V12M12 12L20 7M12 12L4 7" stroke-width="1" opacity=".45"/>
+                    <path d="M12 12V22" stroke-width="1" opacity=".3"/>
+                  </svg>
+                </div>
+                <span class="tool-card__name">Unity</span>
+                <span class="tool-card__tag mono">VR / XR</span>
+                <div class="tool-card__dots" aria-label="Nivel: experto"><span class="dot dot--on"></span><span class="dot dot--on"></span><span class="dot dot--on"></span></div>
+              </div>
+
+              <div class="tool-card">
+                <div class="tool-card__glyph" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+                    <rect x="2" y="6" width="20" height="12" rx="2"/>
+                    <path d="M2 10h20M2 14h20" stroke-width=".9" opacity=".5"/>
+                    <path d="M6 2v4M10 2v4M14 2v4M18 2v4M6 18v4M10 18v4M14 18v4M18 18v4" stroke-width="1.2" opacity=".55"/>
+                  </svg>
+                </div>
+                <span class="tool-card__name">After Effects</span>
+                <span class="tool-card__tag mono">Motion</span>
+                <div class="tool-card__dots" aria-label="Nivel: básico"><span class="dot dot--on"></span><span class="dot"></span><span class="dot"></span></div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <div class="sigil-divider sigil-divider--flip" aria-hidden="true"><svg viewBox="0 0 1400 44" fill="none" preserveAspectRatio="xMidYMid meet"><path d="M0 22 C200 22 300 30 400 22 C500 14 520 28 560 22" stroke="#dc2626" stroke-width="0.5" opacity="0.2" fill="none"/><path d="M1400 22 C1200 22 1100 30 1000 22 C900 14 880 28 840 22" stroke="#dc2626" stroke-width="0.5" opacity="0.2" fill="none"/><path d="M700 4 L712 22 L700 40 L688 22 Z" stroke="#dc2626" stroke-width="1.4" fill="rgba(220,38,38,0.07)" opacity="0.7"/><path d="M700 0 L697 4 L700 2 L703 4 Z" fill="#dc2626" opacity="0.8"/><path d="M700 44 L697 40 L700 42 L703 40 Z" fill="#dc2626" opacity="0.8"/><path d="M685 22 C665 20 640 26 610 22" stroke="#dc2626" stroke-width="0.6" opacity="0.3" fill="none" stroke-linecap="round"/><path d="M715 22 C735 20 760 26 790 22" stroke="#dc2626" stroke-width="0.6" opacity="0.3" fill="none" stroke-linecap="round"/></svg></div>
+
+  <!-- ══════════════════════════════════════════ PROJECTS -->
+  <section id="projects" class="projects section">
+    <svg class="sec-corner sec-corner-tl" viewBox="0 0 220 220" fill="none" aria-hidden="true"><use href="#gothic-corner-ornament" width="220" height="220"></use></svg>
+    <svg class="sec-corner sec-corner-br" viewBox="0 0 220 220" fill="none" aria-hidden="true"><use href="#gothic-corner-ornament" width="220" height="220"></use></svg>
+    <div class="sec-edge--right sec-edge" aria-hidden="true"><div class="sec-edge__line"></div><div class="sec-edge__gem"></div><div class="sec-edge__gem"></div><div class="sec-edge__gem"></div></div>
+    <div class="section-bg-sigil" aria-hidden="true"></div>
+    <svg class="ambient-star ambient-star--projects" viewBox="0 0 120 120" fill="none" aria-hidden="true"><circle cx="60" cy="60" r="52" stroke="#dc2626" stroke-width="0.5" opacity="0.18"/><path d="M60 16 L63 55 L102 60 L63 65 L60 104 L57 65 L18 60 L57 55 Z" stroke="#dc2626" stroke-width="0.6" fill="none" opacity="0.34"/></svg>
+    <div class="container">
+      <header class="section-head">
+        <span class="mono section-num">[ 04 ]</span>
+        <h2 class="section-title">Proyectos</h2>
+        <p class="section-sub">Experiencias construidas con intención.</p>
+      </header>
+
+      <!-- FEATURED: VR Museo Juan del Corral -->
+      <article class="proj-featured" tabindex="0">
+        <svg class="card-arch" viewBox="0 0 100 18" fill="none" preserveAspectRatio="none" aria-hidden="true"><path d="M0 18 L0 10 Q50 -4 100 10 L100 18" stroke="#dc2626" stroke-width="0.8" fill="none" opacity="0.35"/><circle cx="50" cy="0" r="2.5" fill="#dc2626" opacity="0.5"/></svg>
+        <div class="proj-featured__visual">
+          <div class="proj-visual-media proj-visual-media--vr">
+            <img class="proj-visual-img" src="assets/images/juan-del-corral-project.png" alt="Montaje de realidad virtual del Museo Juan del Corral">
+            <span class="mono proj-visual-label">Museo Juan del Corral</span>
+          </div>
+          <div class="proj-featured__badges">
+            <span class="proj-badge proj-badge--done">Completado</span>
+            <span class="proj-badge proj-badge--type">VR</span>
+          </div>
+        </div>
+        <div class="proj-featured__body">
+          <div class="proj-meta"><span class="mono proj-year">2024</span><span class="mono proj-role">Developer + Diseñador</span></div>
+          <h3 class="proj-title">Proyecto Raíces — Museo Juan del Corral</h3>
+          <p class="proj-desc">Experiencia de realidad virtual desarrollada junto a mi equipo para el <strong>Museo Juan del Corral en Santa Fe de Antioquia</strong>. Integramos narrativa, interacción y patrimonio local alrededor de una instalación inmersiva con documentación visual del proyecto.</p>
+          <div class="proj-tech"><span class="tag tag--sm">Unity</span><span class="tag tag--sm">VR</span><span class="tag tag--sm">Museo</span><span class="tag tag--sm">Patrimonio</span><span class="tag tag--sm">Storytelling</span></div>
+          <div class="proj-links">
+            <a href="https://www.canva.com/design/DAG3_N56sKo/D6650U4tIKE9JuzCMPU3KA/edit?utm_content=DAG3_N56sKo&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton" class="proj-link" target="_blank" rel="noopener noreferrer">Canva →</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- FEATURED: Mapping Iglesia -->
+      <article class="proj-featured" tabindex="0">
+        <svg class="card-arch" viewBox="0 0 100 18" fill="none" preserveAspectRatio="none" aria-hidden="true"><path d="M0 18 L0 10 Q50 -4 100 10 L100 18" stroke="#dc2626" stroke-width="0.8" fill="none" opacity="0.35"/><circle cx="50" cy="0" r="2.5" fill="#dc2626" opacity="0.5"/></svg>
+        <div class="proj-featured__visual">
+          <div class="proj-visual-media proj-visual-media--mapping">
+            <img class="proj-visual-img" src="assets/images/mapping-project.png" alt="Visual del proyecto de mapping 3D">
+            <span class="mono proj-visual-label">Mapping 3D</span>
+          </div>
+          <div class="proj-featured__badges">
+            <span class="proj-badge proj-badge--done">Completado</span>
+            <span class="proj-badge proj-badge--type">Mapping</span>
+          </div>
+        </div>
+        <div class="proj-featured__body">
+          <div class="proj-meta"><span class="mono proj-year">2024</span><span class="mono proj-role">Desarrollador + Diseñador</span></div>
+          <h3 class="proj-title">Mapping & Reconstrucción Digital — Museo de Arte Religioso</h3>
+          <p class="proj-desc">Mapping de una iglesia completa y reconstrucción digital del espacio arquitectónico, desarrollado con el <strong>Museo de Arte Religioso de Santa Fe de Antioquia</strong>. Creamos una experiencia visual que conecta la historia de la ciudad con el espacio de la iglesia, tanto interior como exterior.</p>
+          <div class="proj-tech"><span class="tag tag--sm">Mapping</span><span class="tag tag--sm">3D Scan</span><span class="tag tag--sm">Reconstrucción</span><span class="tag tag--sm">Patrimonio</span></div>
+          <div class="proj-links">
+            <a href="https://www.youtube.com/watch?v=4ub0XN10110&list=PLUSxa3PmE5OzqLxgDvIfgmHBB_o-FaFW_&pp=sAgC" class="proj-link proj-link--yt" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 16 12" fill="currentColor" width="14"><path d="M15.3 1.9a2 2 0 0 0-1.4-1.4C12.7 0 8 0 8 0S3.3 0 2.1.5A2 2 0 0 0 .7 1.9C0 3.2 0 6 0 6s0 2.8.7 4.1a2 2 0 0 0 1.4 1.4C3.3 12 8 12 8 12s4.7 0 5.9-.5a2 2 0 0 0 1.4-1.4C16 8.8 16 6 16 6s0-2.8-.7-4.1zm-9.4 6.6V3.5L10.6 6 5.9 8.5z"/></svg>Ver playlist</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- GRID: smaller projects -->
+      <div class="projects__grid">
+
+        <article class="proj-card" tabindex="0" style="--i:0">
+          <svg class="card-arch" viewBox="0 0 100 14" fill="none" preserveAspectRatio="none" aria-hidden="true"><path d="M0 14 L0 8 Q50 -2 100 8 L100 14" stroke="#dc2626" stroke-width="0.7" fill="none" opacity="0.3"/></svg>
+          <div class="proj-card__head">
+            <span class="proj-num mono">03</span>
+            <div class="proj-card__badges"><span class="proj-badge proj-badge--done">Completado</span><span class="proj-badge proj-badge--type">UX/UI</span></div>
+          </div>
+          <h4 class="proj-card__title">App Turística — Medellín</h4>
+          <p class="proj-card__desc">Aplicación pensada para turistas que llegan a Medellín. Diseño completo en Figma con flujos, arquitectura y prototipo interactivo.</p>
+          <div class="proj-tech"><span class="tag tag--xs">Figma</span><span class="tag tag--xs">UX Research</span><span class="tag tag--xs">Prototipado</span></div>
+        </article>
+
+        <article class="proj-card" tabindex="0" style="--i:1">
+          <svg class="card-arch" viewBox="0 0 100 14" fill="none" preserveAspectRatio="none" aria-hidden="true"><path d="M0 14 L0 8 Q50 -2 100 8 L100 14" stroke="#dc2626" stroke-width="0.7" fill="none" opacity="0.3"/></svg>
+          <div class="proj-card__head">
+            <span class="proj-num mono">04</span>
+            <div class="proj-card__badges"><span class="proj-badge proj-badge--done">Completado</span><span class="proj-badge proj-badge--type">UX/UI</span></div>
+          </div>
+          <h4 class="proj-card__title">Rediseño TuBoleta</h4>
+          <p class="proj-card__desc">Análisis y rediseño de la experiencia de usuario de TuBoleta, buscando mejorar claridad, usabilidad y atractivo visual.</p>
+          <div class="proj-tech"><span class="tag tag--xs">Figma</span><span class="tag tag--xs">UX Audit</span><span class="tag tag--xs">UI Design</span></div>
+          <div class="proj-links">
+            <a href="https://www.figma.com/design/pp3eNlUo0hnGclwCAoSfnP/TuBoleta?node-id=0-1&p=f&t=dY7d6l5s6JpywKSP-0" class="proj-link" target="_blank" rel="noopener noreferrer">Ver diseño →</a>
+          </div>
+        </article>
+
+        <article class="proj-card" tabindex="0" style="--i:2">
+          <svg class="card-arch" viewBox="0 0 100 14" fill="none" preserveAspectRatio="none" aria-hidden="true"><path d="M0 14 L0 8 Q50 -2 100 8 L100 14" stroke="#dc2626" stroke-width="0.7" fill="none" opacity="0.3"/></svg>
+          <div class="proj-card__head">
+            <span class="proj-num mono">05</span>
+            <div class="proj-card__badges"><span class="proj-badge proj-badge--active">En progreso</span><span class="proj-badge proj-badge--type">Web</span></div>
+          </div>
+          <h4 class="proj-card__title">App Personal de Finanzas</h4>
+          <p class="proj-card__desc">Herramienta web personal para controlar finanzas, visualizar gastos y entender en qué se va el dinero.</p>
+          <div class="proj-tech"><span class="tag tag--xs">React</span><span class="tag tag--xs">Frontend</span><span class="tag tag--xs">Data viz</span></div>
+          <div class="proj-links">
+            <a href="assets/projects/prototipo-dashboard-finanzas.html" class="proj-link" target="_blank" rel="noopener noreferrer">Ver prototipo →</a>
+          </div>
+        </article>
+
+        <article class="proj-card" tabindex="0" style="--i:3">
+          <svg class="card-arch" viewBox="0 0 100 14" fill="none" preserveAspectRatio="none" aria-hidden="true"><path d="M0 14 L0 8 Q50 -2 100 8 L100 14" stroke="#dc2626" stroke-width="0.7" fill="none" opacity="0.3"/></svg>
+          <div class="proj-card__head">
+            <span class="proj-num mono">06</span>
+            <div class="proj-card__badges"><span class="proj-badge proj-badge--active">En progreso</span><span class="proj-badge proj-badge--type">Web</span></div>
+          </div>
+          <h4 class="proj-card__title">Infografía Digital Interactiva</h4>
+          <p class="proj-card__desc">Proyecto experimental de infografía digital con elementos interactivos. Exploración del storytelling visual en web.</p>
+          <div class="proj-tech"><span class="tag tag--xs">HTML/CSS/JS</span><span class="tag tag--xs">SVG animado</span><span class="tag tag--xs">Interacción</span></div>
+          <div class="proj-links">
+            <a href="assets/projects/el-testigo-mapa-interactivo.html" class="proj-link" target="_blank" rel="noopener noreferrer">Ver interactivo →</a>
+          </div>
+        </article>
+
+        <article class="proj-card" tabindex="0" style="--i:4">
+          <svg class="card-arch" viewBox="0 0 100 14" fill="none" preserveAspectRatio="none" aria-hidden="true"><path d="M0 14 L0 8 Q50 -2 100 8 L100 14" stroke="#dc2626" stroke-width="0.7" fill="none" opacity="0.3"/></svg>
+          <div class="proj-card__head">
+            <span class="proj-num mono">07</span>
+            <div class="proj-card__badges"><span class="proj-badge proj-badge--active">En progreso</span><span class="proj-badge proj-badge--type">VR</span></div>
+          </div>
+          <h4 class="proj-card__title">VR Reciclaje</h4>
+          <p class="proj-card__desc">Experiencia de realidad virtual enfocada en enseñar procesos de reciclaje, trabajada con estudiantes de diseño gráfico.</p>
+          <div class="proj-tech"><span class="tag tag--xs">Unity</span><span class="tag tag--xs">VR</span><span class="tag tag--xs">C#</span><span class="tag tag--xs">Diseño Gráfico</span></div>
+        </article>
+
+        <article class="proj-card" tabindex="0" style="--i:5">
+          <svg class="card-arch" viewBox="0 0 100 14" fill="none" preserveAspectRatio="none" aria-hidden="true"><path d="M0 14 L0 8 Q50 -2 100 8 L100 14" stroke="#dc2626" stroke-width="0.7" fill="none" opacity="0.3"/></svg>
+          <div class="proj-card__head">
+            <span class="proj-num mono">08</span>
+            <div class="proj-card__badges"><span class="proj-badge proj-badge--done">Completado</span><span class="proj-badge proj-badge--type">VR</span></div>
+          </div>
+          <h4 class="proj-card__title">Semillero VR — Vida Marina</h4>
+          <p class="proj-card__desc">Semillero de realidad virtual (2024). Experiencia VR sobre conciencia ambiental y vida marina, junto a estudiantes de diseño gráfico.</p>
+          <div class="proj-tech"><span class="tag tag--xs">Unity</span><span class="tag tag--xs">VR</span><span class="tag tag--xs">Conciencia ambiental</span></div>
+          <div class="proj-links">
+            <span class="proj-link proj-link--soon" aria-disabled="true">Próximamente</span>
+          </div>
+        </article>
+
+        <article class="proj-card" tabindex="0" style="--i:6">
+          <svg class="card-arch" viewBox="0 0 100 14" fill="none" preserveAspectRatio="none" aria-hidden="true"><path d="M0 14 L0 8 Q50 -2 100 8 L100 14" stroke="#dc2626" stroke-width="0.7" fill="none" opacity="0.3"/></svg>
+          <div class="proj-card__head">
+            <span class="proj-num mono">09</span>
+            <div class="proj-card__badges"><span class="proj-badge proj-badge--done">Completado</span><span class="proj-badge proj-badge--type">UX/UI</span></div>
+          </div>
+          <h4 class="proj-card__title">Jero Reto 2</h4>
+          <p class="proj-card__desc">Reto de diseño UX/UI con proceso completo: investigación de usuario, definición del problema, ideación, wireframes y prototipo final en Figma.</p>
+          <div class="proj-tech"><span class="tag tag--xs">Figma</span><span class="tag tag--xs">UX Research</span></div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <div class="sigil-divider sigil-divider--flip" aria-hidden="true"><svg viewBox="0 0 1400 44" fill="none" preserveAspectRatio="xMidYMid meet"><path d="M0 22 C200 22 300 30 400 22 C500 14 520 28 560 22" stroke="#dc2626" stroke-width="0.5" opacity="0.2" fill="none"/><path d="M1400 22 C1200 22 1100 30 1000 22 C900 14 880 28 840 22" stroke="#dc2626" stroke-width="0.5" opacity="0.2" fill="none"/><path d="M700 4 L712 22 L700 40 L688 22 Z" stroke="#dc2626" stroke-width="1.4" fill="rgba(220,38,38,0.07)" opacity="0.7"/><path d="M700 0 L697 4 L700 2 L703 4 Z" fill="#dc2626" opacity="0.8"/><path d="M700 44 L697 40 L700 42 L703 40 Z" fill="#dc2626" opacity="0.8"/><path d="M685 22 C665 20 640 26 610 22" stroke="#dc2626" stroke-width="0.6" opacity="0.3" fill="none" stroke-linecap="round"/><path d="M715 22 C735 20 760 26 790 22" stroke="#dc2626" stroke-width="0.6" opacity="0.3" fill="none" stroke-linecap="round"/></svg></div>
+
+  <!-- ══════════════════════════════════════════ GALLERY -->
+  <section id="gallery" class="gallery section">
+    <svg class="sec-corner sec-corner-tl" viewBox="0 0 220 220" fill="none" aria-hidden="true"><use href="#gothic-corner-ornament" width="220" height="220"></use></svg>
+    <svg class="sec-corner sec-corner-br" viewBox="0 0 220 220" fill="none" aria-hidden="true"><use href="#gothic-corner-ornament" width="220" height="220"></use></svg>
+    <div class="section-bg-sigil" aria-hidden="true"></div>
+    <svg class="ambient-star ambient-star--gallery" viewBox="0 0 120 120" fill="none" aria-hidden="true"><circle cx="60" cy="60" r="52" stroke="#dc2626" stroke-width="0.5" opacity="0.18"/><path d="M60 16 L63 55 L102 60 L63 65 L60 104 L57 65 L18 60 L57 55 Z" stroke="#dc2626" stroke-width="0.6" fill="none" opacity="0.34"/></svg>
+    <div class="container">
+      <header class="section-head">
+        <span class="mono section-num">[ 05 ]</span>
+        <h2 class="section-title">Galería</h2>
+        <p class="section-sub">Fragmentos visuales, procesos y pruebas de cosas que he construido.</p>
+      </header>
+
+      <div class="gallery__planet-wrap">
+        <canvas id="gallery-canvas" aria-label="Galería orbital 3D"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <div class="sigil-divider" aria-hidden="true"><svg viewBox="0 0 1400 44" fill="none" preserveAspectRatio="xMidYMid meet"><path d="M0 22 C150 22 250 14 380 22 C510 30 540 16 600 22" stroke="#dc2626" stroke-width="0.5" opacity="0.2" fill="none"/><path d="M1400 22 C1250 22 1150 14 1020 22 C890 30 860 16 800 22" stroke="#dc2626" stroke-width="0.5" opacity="0.2" fill="none"/><path d="M700 4 L712 22 L700 40 L688 22 Z" stroke="#dc2626" stroke-width="1.4" fill="rgba(220,38,38,0.07)" opacity="0.7"/><path d="M700 0 L697 4 L700 2 L703 4 Z" fill="#dc2626" opacity="0.8"/><path d="M700 44 L697 40 L700 42 L703 40 Z" fill="#dc2626" opacity="0.8"/></svg></div>
+
+  <!-- ══════════════════════════════════════════ ROADMAP -->
+  <section id="roadmap" class="roadmap section">
+    <svg class="sec-corner sec-corner-tl" viewBox="0 0 220 220" fill="none" aria-hidden="true"><use href="#gothic-corner-ornament" width="220" height="220"></use></svg>
+    <svg class="sec-corner sec-corner-br" viewBox="0 0 220 220" fill="none" aria-hidden="true"><use href="#gothic-corner-ornament" width="220" height="220"></use></svg>
+    <canvas class="sec-canvas" id="roadmap-canvas" aria-hidden="true"></canvas>
+    <div class="section-bg-sigil" aria-hidden="true"></div>
+    <div class="container">
+      <header class="section-head">
+        <span class="mono section-num">[ 06 ]</span>
+        <h2 class="section-title">Roadmap</h2>
+        <p class="section-sub">El camino recorrido. La visión hacia adelante.</p>
+      </header>
+
+      <div class="languages-panel languages-panel--roadmap">
+        <p class="languages__label mono">// Idiomas que hablo</p>
+        <div class="languages languages--roadmap">
+          <span class="lang-item"><span class="mono lang-code">ES</span><span class="lang-name">Español</span><span class="lang-level mono">Nativo</span></span>
+          <span class="lang-sep" aria-hidden="true">✦</span>
+          <span class="lang-item"><span class="mono lang-code">EN</span><span class="lang-name">Inglés</span><span class="lang-level mono">B2</span></span>
+        </div>
+      </div>
+
+      <div class="roadmap__timeline">
+        <div class="roadmap__line" aria-hidden="true"></div>
+
+        <div class="roadmap__item roadmap__item--done" style="--i:0">
+          <div class="roadmap__node"><svg viewBox="0 0 16 12" fill="none"><path d="M1 6l4 4 9-9" stroke="#dc2626" stroke-width="2" stroke-linecap="square"/></svg></div>
+          <div class="roadmap__content">
+            <span class="roadmap__year mono">2021 — 2022</span>
+            <h4 class="roadmap__title">Nanotecnología</h4>
+            <p class="roadmap__desc">Inicio universitario en Ingeniería en Nanotecnología. Primer acercamiento al mundo científico y tecnológico.</p>
+          </div>
+        </div>
+
+        <div class="roadmap__item roadmap__item--done" style="--i:1">
+          <div class="roadmap__node"><svg viewBox="0 0 16 12" fill="none"><path d="M1 6l4 4 9-9" stroke="#dc2626" stroke-width="2" stroke-linecap="square"/></svg></div>
+          <div class="roadmap__content">
+            <span class="roadmap__year mono">2022</span>
+            <h4 class="roadmap__title">Diplomado en Gestión Humana</h4>
+            <p class="roadmap__desc">Formación en gestión humana, trabajo con personas y habilidades de comunicación y liderazgo.</p>
+          </div>
+        </div>
+
+        <div class="roadmap__item roadmap__item--done" style="--i:2">
+          <div class="roadmap__node"><svg viewBox="0 0 16 12" fill="none"><path d="M1 6l4 4 9-9" stroke="#dc2626" stroke-width="2" stroke-linecap="square"/></svg></div>
+          <div class="roadmap__content">
+            <span class="roadmap__year mono">2022 — Presente</span>
+            <h4 class="roadmap__title">Ingeniería en Diseño y Entretenimiento Digital</h4>
+            <p class="roadmap__desc">Cambio de carrera hacia mi verdadera pasión. Diseño, tecnología, videojuegos, VR, IA e interacción.</p>
+            <div class="roadmap__tags"><span class="tag tag--xs">Diseño</span><span class="tag tag--xs">VR</span><span class="tag tag--xs">Unity</span><span class="tag tag--xs">IA</span></div>
+          </div>
+        </div>
+
+        <div class="roadmap__item roadmap__item--done" style="--i:3">
+          <div class="roadmap__node"><svg viewBox="0 0 16 12" fill="none"><path d="M1 6l4 4 9-9" stroke="#dc2626" stroke-width="2" stroke-linecap="square"/></svg></div>
+          <div class="roadmap__content">
+            <span class="roadmap__year mono">2024</span>
+            <h4 class="roadmap__title">Semillero VR · Proyectos con Museos</h4>
+            <p class="roadmap__desc">Primer semillero de realidad virtual. Proyectos reales con el Museo del Corral y el Museo de Arte Religioso de Santa Fe de Antioquia.</p>
+            <div class="roadmap__tags"><span class="tag tag--xs">VR</span><span class="tag tag--xs">Clientes reales</span><span class="tag tag--xs">Patrimonio</span></div>
+          </div>
+        </div>
+
+        <div class="roadmap__item roadmap__item--active" style="--i:4">
+          <div class="roadmap__node roadmap__node--active"><span class="roadmap__pulse"></span></div>
+          <div class="roadmap__content">
+            <span class="roadmap__year mono">2024 — Presente</span>
+            <h4 class="roadmap__title">Expansión: Web · IA · VR</h4>
+            <p class="roadmap__desc">Construcción del portafolio, aplicaciones web personales, proyectos con IA, VR y diseño interactivo. Primeros clientes y colaboraciones.</p>
+            <div class="roadmap__tags"><span class="tag tag--xs">React</span><span class="tag tag--xs">IA</span><span class="tag tag--xs">Three.js</span><span class="tag tag--xs">Freelance</span></div>
+          </div>
+        </div>
+
+        <div class="roadmap__item roadmap__item--future" style="--i:5">
+          <div class="roadmap__node roadmap__node--future"></div>
+          <div class="roadmap__content">
+            <span class="roadmap__year mono">2026+</span>
+            <h4 class="roadmap__title">Especialización & Estudio Propio</h4>
+            <p class="roadmap__desc">Empresa de entretenimiento digital. Estudio creativo propio. Proyectos donde diseño, VR, IA y narrativa se fusionan en experiencias únicas.</p>
+            <div class="roadmap__tags"><span class="tag tag--xs">Estudio creativo</span><span class="tag tag--xs">Dirección</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <svg class="roadmap__rune" viewBox="0 0 120 120" fill="none" aria-hidden="true">
+      <circle cx="60" cy="60" r="55" stroke="#dc2626" stroke-width="0.5" opacity="0.2"/>
+      <path d="M60 5 C45 30 35 55 40 80 C45 105 60 115 60 115 C60 115 75 105 80 80 C85 55 75 30 60 5Z" stroke="#dc2626" stroke-width="0.5" fill="none" opacity="0.15"/>
+      <path d="M60 20 L62 55 L90 60 L62 65 L60 100 L58 65 L30 60 L58 55 Z" stroke="#dc2626" stroke-width="0.6" fill="none" opacity="0.3"/>
+      <circle cx="60" cy="60" r="8" stroke="#dc2626" stroke-width="0.4" fill="none" opacity="0.2"/>
+    </svg>
+  </section>
+
+  <div class="sigil-divider" aria-hidden="true"><svg viewBox="0 0 1400 44" fill="none" preserveAspectRatio="xMidYMid meet"><path d="M0 22 C200 22 300 14 400 22 C500 30 520 16 560 22" stroke="#dc2626" stroke-width="0.5" opacity="0.2" fill="none"/><path d="M1400 22 C1200 22 1100 14 1000 22 C900 30 880 16 840 22" stroke="#dc2626" stroke-width="0.5" opacity="0.2" fill="none"/><path d="M700 4 L712 22 L700 40 L688 22 Z" stroke="#dc2626" stroke-width="1.4" fill="rgba(220,38,38,0.07)" opacity="0.7"/><path d="M700 0 L697 4 L700 2 L703 4 Z" fill="#dc2626" opacity="0.8"/><path d="M700 44 L697 40 L700 42 L703 40 Z" fill="#dc2626" opacity="0.8"/></svg></div>
+
+  <!-- ══════════════════════════════════════════ CONTACT -->
+  <section id="contact" class="contact section">
+    <svg class="sec-corner sec-corner-tl" viewBox="0 0 220 220" fill="none" aria-hidden="true"><use href="#gothic-corner-ornament" width="220" height="220"></use></svg>
+    <svg class="sec-corner sec-corner-br" viewBox="0 0 220 220" fill="none" aria-hidden="true"><use href="#gothic-corner-ornament" width="220" height="220"></use></svg>
+    <div class="sec-edge" aria-hidden="true"><div class="sec-edge__line"></div><div class="sec-edge__gem"></div><div class="sec-edge__gem"></div><div class="sec-edge__gem"></div></div>
+    <div class="section-bg-sigil" aria-hidden="true"></div>
+    <svg class="ambient-star ambient-star--contact" viewBox="0 0 120 120" fill="none" aria-hidden="true"><circle cx="60" cy="60" r="52" stroke="#dc2626" stroke-width="0.5" opacity="0.18"/><path d="M60 16 L63 55 L102 60 L63 65 L60 104 L57 65 L18 60 L57 55 Z" stroke="#dc2626" stroke-width="0.6" fill="none" opacity="0.34"/></svg>
+    <div class="container">
+      <header class="section-head">
+        <span class="mono section-num">[ 07 ]</span>
+        <h2 class="section-title">Contacto</h2>
+      </header>
+
+      <div class="contact__grid">
+        <div class="contact__left">
+          <h3 class="contact__headline">¿Tienes un proyecto<br>con intención?<br><em class="contact__accent">Hablemos.</em></h3>
+          <p class="contact__sub">Abierto a colaboraciones, proyectos freelance, prácticas y conversaciones sobre diseño, VR, IA y tecnología.</p>
+          <nav class="contact__links" aria-label="Links de contacto">
+            <a href="https://www.linkedin.com/in/jeronimo-montoya-800ab9334/" class="contact__link" target="_blank" rel="noopener noreferrer">
+              <span class="mono contact__link-lbl">LinkedIn</span>
+              <span class="contact__link-val">/in/jeronimo-montoya</span>
+              <span class="contact__link-arr" aria-hidden="true">→</span>
+            </a>
+            <a href="https://github.com/skulls562" class="contact__link" target="_blank" rel="noopener noreferrer">
+              <span class="mono contact__link-lbl">GitHub</span>
+              <span class="contact__link-val">@skulls562</span>
+              <span class="contact__link-arr" aria-hidden="true">→</span>
+            </a>
+          </nav>
+        </div>
+        <div class="contact__right">
+          <div class="contact__form">
+            <p class="mono">// CONTACTO PROFESIONAL</p>
+            <h4>Conversemos por LinkedIn</h4>
+            <p>Es el canal donde comparto contexto, proyectos y oportunidades sin publicar datos personales en el sitio.</p>
+            <a href="https://www.linkedin.com/in/jeronimo-montoya-800ab9334/" class="btn btn--primary" target="_blank" rel="noopener noreferrer">Abrir LinkedIn</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__inner">
+        <span class="footer__brand mono">JMG<em class="footer__dot">.</em></span>
+        <span class="footer__name mono">Jerónimo Montoya Giraldo</span>
+        <span class="footer__copy mono">© 2026</span>
+        <a href="#hero" class="footer__top mono" aria-label="Volver arriba">↑ Top</a>
+      </div>
+    </div>
+    <svg class="footer__chain" viewBox="0 0 1400 24" fill="none" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+      <path d="M0 12 C200 12 250 6 350 12 C450 18 480 8 600 12 C720 16 750 8 900 12 C1050 16 1100 8 1200 12" stroke="#dc2626" stroke-width="0.4" opacity="0.2" fill="none"/>
+    </svg>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
